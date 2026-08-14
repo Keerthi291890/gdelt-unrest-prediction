@@ -216,3 +216,17 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- Project-specific: GDELT data, Spark/Hadoop artifacts, secrets ---
+data/raw/
+data/processed/
+*.csv
+*.parquet
+!data/sample/*.csv
+checkpoints/
+spark-warehouse/
+metastore_db/
+derby.log
+*.crc
+_SUCCESS
+config/secrets.yaml
