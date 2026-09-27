@@ -1,13 +1,77 @@
-# gdelt-unrest-prediction
-# Real-Time Political Unrest Prediction from Global News Signals
+# Real-Time, Uncertainty-Aware Global Event Escalation Early Warning Using GDELT and Apache Spark
 
-A Spark-based pipeline that estimates political unrest risk from GDELT's global news stream, updated every 15 minutes. Escalating unrest shows up in shifting conflict-event share and emotional tone before it's obvious in any single headline, so these signals become an early-warning sensor. The pipeline turns raw events and GKG sentiment into live per-country escalation forecasts, with an MLlib classifier trained on history and updated as new data arrives. Results are benchmarked against a published country-instability study to test whether richer sentiment and real-time delivery improve on a static baseline.
+A Big Data Analytics project using GDELT and Apache Spark to build a country-level early-warning pipeline for event escalation.
 
-## Status
+## Project Goal
 
-🚧 Early development — architecture and design docs are in place; pipeline implementation in progress.
+The pipeline treats GDELT as a noisy, high-frequency observation layer and uses an independent conflict/event dataset as the future outcome layer.
 
-## Course context
+Conceptually:
 
-Built for the Big Data Analytics course (Hadoop, Scala/FP, Apache Spark, MLlib).
+GDELT information at time t
+        ↓
+country-level features
+        ↓
+future independent outcome
+        ↓
+escalation prediction
 
+## Historical Experiment
+
+- Period: April 1, 2026 – June 30, 2026
+- Duration: 91 days
+- Countries:
+  - United States (`US`)
+  - India (`IN`)
+  - Nigeria (`NI`)
+  - Ukraine (`UP`)
+  - South Africa (`SF`)
+- Processing framework: Apache Spark
+
+## Team Responsibilities
+
+### Person A — Data Pipeline
+
+- GDELT data acquisition
+- Events processing
+- Mentions processing
+- Compact GKG processing
+- Country filtering
+- Events–Mentions–GKG joining
+- Validation and data-quality checks
+- Temporal auditing
+- Historical handoff to Person B
+
+### Person B — Features and Modeling
+
+- Independent outcome dataset
+- Country-day aggregation
+- Feature engineering
+- Future escalation label
+- Time-aware evaluation
+- Baseline and ML models
+- Calibration and evaluation
+
+### Person C — Live Inference
+
+- Live/near-real-time ingestion
+- Reuse of Person B feature definitions
+- Model inference
+- Periodic retraining
+- Uncertainty-aware outputs
+- Monitoring/dashboard
+
+## Repository Structure
+
+```text
+gdelt-unrest-prediction/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── docs/
+│   └── person_a_handoff.md
+├── src/
+│   └── person_a/
+└── processing/
+    └── person_a/
+        └── stage2_live/
