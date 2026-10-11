@@ -217,16 +217,31 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# --- Project-specific: GDELT data, Spark/Hadoop artifacts, secrets ---
+```gitignore
+# --- Project-specific ---
 data/raw/
 data/processed/
+data/PersonA_handoff/
+data/temp/
+output.txt
+*.rar
+
+# CSV and Parquet ignored by default
 *.csv
 *.parquet
+
+# Keep sample data, Member B results, and model tree data
 !data/sample/*.csv
+!results/person_b/*.csv
+!models/**/*.parquet
+
+# Spark/Hadoop artefacts. Keep these LAST
 checkpoints/
 spark-warehouse/
 metastore_db/
 derby.log
 *.crc
 _SUCCESS
+
 config/secrets.yaml
+.vscode/

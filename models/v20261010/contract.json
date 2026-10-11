@@ -1,0 +1,109 @@
+{
+  "version": "v20261010",
+  "trained_on": {
+    "rows": 156,
+    "positives": 26,
+    "prevalence": 0.16666666666666666,
+    "date_min": "2026-04-14",
+    "date_max": "2026-06-30",
+    "countries": [
+      "NI",
+      "UP"
+    ],
+    "marginal_not_trained": [
+      "IN"
+    ],
+    "excluded": [
+      "SF",
+      "US"
+    ]
+  },
+  "supported_countries": [
+    "NI",
+    "UP"
+  ],
+  "unsupported_behaviour": "for IN, SF, US return status='unsupported', no probability",
+  "models": {
+    "prod_clf": {
+      "feature_set": "persist_lag30",
+      "features": [
+        "p_lag_ratio",
+        "p_lag_level"
+      ],
+      "path": "prod_clf",
+      "role": "production escalation probability"
+    },
+    "prod_reg": {
+      "feature_set": "persist_lag30",
+      "features": [
+        "p_lag_ratio",
+        "p_lag_level"
+      ],
+      "path": "prod_reg",
+      "role": "production severity (log ratio)"
+    },
+    "shadow_clf": {
+      "feature_set": "lag30_plus_gdelt",
+      "features": [
+        "p_lag_ratio",
+        "p_lag_level",
+        "g_event_count_d7",
+        "g_doc_count_d7",
+        "g_unique_mention_sources_d7",
+        "g_spread_p50_min_d7",
+        "g_media_per_event_d7",
+        "g_violent_event_share_d7",
+        "g_conflict_quad_share_d7",
+        "g_gold_mean_d7",
+        "g_neg_event_ratio_d7",
+        "g_ev_tone_mean_d7",
+        "g_source_hhi_d7",
+        "g_multi_source_event_share_d7"
+      ],
+      "path": "shadow_clf",
+      "role": "shadow only, never alerts"
+    }
+  },
+  "label": {
+    "horizon_days": 7,
+    "baseline_days": 28,
+    "ratio": 1.5,
+    "floor_deaths": 5,
+    "source": "UCDP Candidate GEDEvent_v26_01_26_06.csv + GEDEvent_v26_0_7.csv"
+  },
+  "persistence_lag_days": 60,
+  "alert_threshold": {
+    "rule": "p >= training prevalence",
+    "value": 0.16666666666666666,
+    "status": "diagnostic only, not a calibrated decision rule"
+  },
+  "hyperparameters": {
+    "rf": "300 trees, depth 3, min leaf 5, seed 0",
+    "gbt": "50 iter, depth 2, step 0.05, subsample 0.8, seed 0"
+  },
+  "country_code_system": "GDELT/FIPS: US IN NI UP SF",
+  "evaluation_status": "GDELT improvement rules (stated before the run, committed after) were NOT met",
+  "known_limits": [
+    "~11 escalation episodes, 2 test episodes (both UP)",
+    "propagation features truncated at midnight",
+    "UCDP Candidate data may be revised",
+    "no GCAM features",
+    "IN is marginal and was NOT used for training; the production model must not score IN"
+  ],
+  "probability_status": "uncalibrated risk score for ranking; isotonic tested and rejected",
+  "calibration_method": "none",
+  "retraining": "monthly, after each UCDP Candidate release",
+  "label_resolution": "UCDP release covering t+7; weeks, not days",
+  "deployment_note": "prod_* models use no GDELT; shadow_clf must never alert",
+  "ucdp_lag_observation": "newest UCDP release (Aug 2026, covers through 2026-08-31) was 40 days behind on 2026-10-10",
+  "scoring": {
+    "timezone": "UTC",
+    "score_after": "23:45 batch of the day has landed",
+    "never_score_partial_days": true,
+    "gating": "prod_status needs only UCDP persistence; shadow_status also needs GDELT"
+  },
+  "history_required": {
+    "gdelt_days": 14,
+    "ucdp_days_before_t": 87
+  }
+}
